@@ -1,0 +1,25 @@
+<html>
+  <head></head>
+  <body>
+    <h1>Witaj w aplikacji watering.app!</h1>
+
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+           <li>{{ message|capfirst }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Lista odczytów:</h2>
+    <ol>
+      {% for sensors in  sensors%}
+        <li>
+          <strong>{{ sensors.sensor }}</strong> ({{ sensors.dataPub }}):
+          <br /> {{ sensors.value }}
+        </li>
+      {% endfor %}
+    </ol>
+
+  </body>
+</html>
