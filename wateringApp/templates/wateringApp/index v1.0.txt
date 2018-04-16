@@ -1,0 +1,18 @@
+{% extends "wateringApp/base.html" %}
+ <!--  
+{% block links1 %}
+  <ul>
+    <li><a href="{% url 'wateringApp:singIn' %}">Zaloguj siê</a></li>
+  </ul>
+  {% endblock %} 
+
+{% block links2%}
+  <p>Jesteœ zalogowany jako {{ user.username }}</p>
+  <ul>
+    <li><a href="{% url 'wateringApp:readOut' %}">Odczyty</a></li>
+    <li><a href="{% url 'wateringApp:singOut' %}">Wyloguj</a></li>
+  </ul>
+{% endblock %}  -->
+ {% block header %} Witaj w aplikacji Watering.app{% endblock header%} {% block contents%}
+ <h3>Mo¿esz tutaj podejrzeæ aktualny warunki wokó³ swojej roœliny.</h3>
+{% endblock %}

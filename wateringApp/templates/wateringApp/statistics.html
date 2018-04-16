@@ -1,0 +1,63 @@
+{% extends "wateringApp/base.html" %} 
+
+{% block header %} 
+    Statystyki czujników 
+{% endblock header%} 
+
+{% block contents%}
+    <div class="ui grid">
+        {% for sensors in sensors%}
+            <div class="eight wide column">
+                <h3>
+                    {% if sensors.sensor == 'lumen'%}
+                    <i class="sun outline icon"></i>
+                    {% elif sensors.sensor == 'waterContent' %}
+                    <i class="tint icon"></i>
+                    {% elif sensors.sensor == 'temperature' %}
+                    <i class="thermometer half icon"></i>
+                    {% elif sensors.sensor == 'poziom' %}
+                    <i class="battery half icon"></i>
+                    {% endif %} {{ sensors.sensor }}
+                </h3>
+                <canvas id='myChart' width="200" height="100"></canvas>
+                <!-- 
+                <p>{{ sensors.dataPub }}</p>
+                <p>{{ sensors.value }}</p> 
+                -->
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["24:00", "6:00", "12:00", "18:00", "24:00", "6:00"],
+                datasets: [{
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgb(118, 205, 206, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgb(118, 205, 206, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+</script> 
+{% endblock %}

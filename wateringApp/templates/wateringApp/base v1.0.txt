@@ -1,0 +1,104 @@
+<!DOCTYPE html> {% load staticfiles %}
+<html lang="pl">
+<meta charset="utf-8" />
+
+<head>
+    <title>
+        {% block title %} Watering.app system automatycznego podlewania roœlin. {% endblock title %}
+    </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'wateringApp\SemanticUI\semantic.css' %}">
+    <script type="text/javascript" src="{% static 'wateringApp\js\jquery-3.3.1.slim.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'wateringApp\SemanticUI\semantic.js' %}"></script>
+</head>
+
+<body>
+    <div class="ui container">
+        <div class="ui text menu">
+            <div class="item">
+                <img src="{% static '\wateringApp\img\raindrop.png' %}">
+            </div>
+            <a class="browse item">
+                Watering.app
+            </a>
+            <div class="ui right dropdown item">
+                <i class="user circle outline icon"></i> {{ user.username }}
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">
+                        <a>
+                            <i class="address card outline icon"></i>Konto</a>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <i class="language icon"></i>Zmieñ jêzyk</a>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <i class="life ring outline icon"></i>Pomoc</a>
+                    </div>
+                    <!-- Wylogowywanie
+                    <div class="item">
+                        <a href="">
+                            <i class="power off icon"></i>Wyloguj</a>
+                    </div> 
+                    -->
+                </div>
+            </div>
+        </div> <!-- top menu end -->
+        <hr>
+        <div class="ui grid">
+            <div class="three wide column">
+                <div class="ui vertical labeled icon menu">
+                    <a class="item" href="{% url 'wateringApp:index' %}">
+                        <i class="tachometer alternate icon"></i>
+                        Strona g³ówna
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:statistics' %}">
+                        <i class="chart pie icon"></i>
+                        Statystyki
+                    </a>
+                    <a class="item">
+                        <i class="cogs icon"></i>
+                        Ustawienia
+                    </a>
+                </div>
+            </div> <!-- left menu end -->
+            <div class="one wide column"></div>
+            <div class="eleven wide column">
+                <h1>
+                    {% block header %} 
+                        Witaj w aplikacji Watering.app! 
+                    {% endblock header%}
+                </h1>
+
+                {% block messages %} 
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{ message|capfirst }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endblock %} 
+
+                {% block contents %} 
+                {% endblock %} 
+                
+                {% if user.is_authenticated %} 
+                    {% block links1 %} {% endblock%}
+                {% else %} 
+                    {% block links2 %} {% endblock %} 
+                {% endif %} 
+                
+                {% block links4 %} {% endblock %}
+            </div><!-- context end-->
+        </div><!-- ui grid -->
+    </div><!-- ui container end-->
+</body>
+
+<script>
+    $('.ui.dropdown')
+        .dropdown()
+        ;
+</script>
+</html>
