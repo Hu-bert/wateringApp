@@ -5,59 +5,157 @@
 {% endblock header%} 
 
 {% block contents%}
-    <div class="ui grid">
-        {% for sensors in sensors%}
-            <div class="eight wide column">
-                <h3>
-                    {% if sensors.sensor == 'lumen'%}
-                    <i class="sun outline icon"></i>
-                    {% elif sensors.sensor == 'waterContent' %}
-                    <i class="tint icon"></i>
-                    {% elif sensors.sensor == 'temperature' %}
-                    <i class="thermometer half icon"></i>
-                    {% elif sensors.sensor == 'poziom' %}
-                    <i class="battery half icon"></i>
-                    {% endif %} {{ sensors.sensor }}
-                </h3>
-                <canvas id='myChart' width="200" height="100"></canvas>
-                <!-- 
-                <p>{{ sensors.dataPub }}</p>
-                <p>{{ sensors.value }}</p> 
-                -->
-            </div>
-        {% endfor %}
+<div class="ui stackable grid">
+    <div class="sixteen wide column">
+        <h3>
+            <i class="sun outline icon"></i>Nasłonecznienie</h3>
+        <canvas id='lumen' width="200" height="100"></canvas>
+    </div>
+    <div class="sixteen wide column">
+        <h3>
+            <i class="sun outline icon"></i>Wilgotność gleby</h3>
+        <canvas id='waterContent' width="200" height="100"></canvas>
+    </div>
+    <div class="sixteen wide column">
+        <h3>
+            <i class="thermometer half icon"></i>Temperatura</h3>
+        <canvas id='temperature' width="200" height="100"></canvas>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-    <script>
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["24:00", "6:00", "12:00", "18:00", "24:00", "6:00"],
-                datasets: [{
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgb(118, 205, 206, 0.5)',
-                    ],
-                    borderColor: [
-                        'rgb(118, 205, 206, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="ui icon message" id="message">
+    <div class="content">
+        <div class="header">
+            Opcje
+        </div>
+        {%for lumen in lumen %}
+        <p>{{lumen.value}}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block script %} 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+<script>
+        var ctx1 = document.getElementById("lumen");
+        var ctx2 = document.getElementById("waterContent");
+        var ctx3 = document.getElementById("temperature");
+        var lumen, temperature, waterContent;
+        var lumenLabels=[], lumenData=[];
+        var temperatureLabels=[], temperatureData=[];
+        var waterContentLabels=[], waterContentData=[];
+        $.ajax({
+            url: "/api/data",
+            async: false, //to do: zrobić to ładniej
+            success: function (object) {
+                lumen = object.lumen;
+                temperature = object.temperature;
+                waterContent= object.waterContent;
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
         });
+
+        for(i = 0; i< lumen.length;i++){
+            lumenLabels.push(lumen[i].dataPub);
+            lumenData.push(lumen[i].value)
+        }
+        for(i = 0; i< temperature.length;i++){
+            temperatureLabels.push(temperature[i].dataPub);
+            temperatureData.push(temperature[i].value)
+        }
+        for(i = 0; i< waterContent.length;i++){
+            waterContentLabels.push(waterContent[i].dataPub);
+            waterContentData.push(waterContent[i].value)
+        }
+
+    var lumen = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: lumenLabels,
+            datasets: [{
+                data: lumenData,
+                backgroundColor: [
+                    'rgb(118, 205, 206, 0.5)',
+                ],
+                borderColor: [
+                    'rgb(118, 205, 206, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    var waterContent = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels:  waterContentLabels,
+            datasets: [{
+                data:  waterContentData,
+                backgroundColor: [
+                    'rgb(118, 205, 206, 0.5)',
+                ],
+                borderColor: [
+                    'rgb(118, 205, 206, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    var temperature = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: temperatureLabels,
+            datasets: [{
+                data: temperatureData,
+                backgroundColor: [
+                    'rgb(118, 205, 206, 0.5)',
+                ],
+                borderColor: [
+                    'rgb(118, 205, 206, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 </script> 
 {% endblock %}

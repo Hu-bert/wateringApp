@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login as auth_login
 
@@ -10,8 +10,13 @@ from wateringApp.models import Statistics
 
 def index(request):
     """Strona główna aplikacji."""
+    currentTemperature = Statistics.objects.filter(sensor='temperature').last()
+    currentTemperature.value= int(int(currentTemperature.value)*2.5)
+    currentWaterContent = Statistics.objects.filter(sensor='waterContent').last()
+    currentLumen = Statistics.objects.filter(sensor='lumen').last()
+    context = {'temperature': currentTemperature,'waterContent': currentWaterContent,'lumen': currentLumen}
     # return HttpResponse("Witaj w aplikacji!")
-    return render(request, 'wateringApp/index.html')
+    return render(request, 'wateringApp/index.html', context)
 
 # do zrobienia logowanie, wylogowywanie
 # def singIn(request):
@@ -35,6 +40,34 @@ def index(request):
 
 def statistics(request):
     """Odczyty"""
+    temperature = Statistics.objects.filter(sensor='temperature')
+    waterContent = Statistics.objects.filter(sensor='waterContent')
+    lumen = Statistics.objects.filter(sensor='lumen')
+    context = {'temperature': temperature,'waterContent': waterContent,'lumen': lumen}
+    return render(request, 'wateringApp/statistics.html', context)
+
+def settings(request):
+    """Ustawienia"""
     sensors = Statistics.objects.all()
     context = {'sensors': sensors}
-    return render(request, 'wateringApp/statistics.html', context)
+    return render(request, 'wateringApp/settings.html', context)   
+
+def get_data(request):
+    temperature = Statistics.objects.filter(sensor='temperature').values('value', 'dataPub')
+    temperature_list = list(temperature)
+    waterContent = Statistics.objects.filter(sensor='waterContent').values('value', 'dataPub')
+    waterContent_list = list(waterContent)
+    lumen = Statistics.objects.filter(sensor='lumen').values('value', 'dataPub')
+    lumen_list = list(lumen)
+    data ={
+        'temperature': temperature_list,
+        'waterContent': waterContent_list,
+        'lumen': lumen_list,
+    }
+    return JsonResponse(data)
+
+def flowers(request):
+    """Kwiaty"""
+    sensors = Statistics.objects.all()
+    context = {'sensors': sensors}
+    return render(request, 'wateringApp/flowers.html', context)

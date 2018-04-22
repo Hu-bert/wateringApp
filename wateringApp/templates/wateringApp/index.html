@@ -1,9 +1,93 @@
 {% extends "wateringApp/base.html" %} 
 
-{% block header %} 
-  Witaj w aplikacji Watering.app
-{% endblock header%} 
+{% block header %} Witaj w aplikacji Watering.app {% endblock header%} 
 
 {% block contents%}
-  <h3>Możesz tutaj podejrzeć aktualny warunki wokół swojej rośliny.</h3>
+<h3>Aktualne warunki wokół swojej rośliny:</h3>
+<div class="ui  progress blue" data-value="{{ waterContent.value }}" data-total="100" id="waterContent">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="label">Wilgotność gleby podana w zakresie od 0 do 100 %</div>
+</div>
+<br>
+<div class="ui  progress brown" data-value="{{ temperature.value }}" data-total="100" id="temperature">
+    <div class="bar">
+        <div class="progress" id="change"></div>
+    </div>
+    <div class="label">Temperatura powietrza w okół roślny podana w zakresie od 0 do 40 °C</div>
+</div>
+<br>
+<div class="ui  progress yellow" data-value="{{ lumen.value}}" data-total="10000" id="lumen">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="label">Światło padjące na roślinę podana w zakresie 0 do 10000 lm
+        <br>gdzie 0 to noc, a 10000 to słoneczny dzień</div>
+</div>
+<br> 
 {% endblock %}
+
+{% block sidebar %}
+<div class="ui icon message" id="message">
+    <i class="cloud icon" id="cloud"></i>
+    <div class="content">
+        <div class="header">
+            Dzisiejsza pogoda
+        </div>
+        <p>Twoje miasto:
+            <span id="city" class="float_right"></span>
+        </p>
+        <p>Temperatura:</p>
+        <p>
+            <span id="temp_min"></span>°C do
+            <span id="temp_max"></span>°C</p>
+        <p id="alert"></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#lumen').progress(
+        {
+            text: {
+                percent: '{percent}00 lm',
+                ratio: '{value}',
+            }
+        });
+
+    $('#temperature').progress(
+        {
+            text: {
+                percent: '{percent} °C',
+                ratio: '{value}',
+            }
+        });
+        
+    $('#waterContent').progress(
+        {
+            text: {
+                percent: '{percent} %',
+                ratio: '{value}',
+            }
+        });
+
+    $.ajax({
+        url: "https://fcc-weather-api.glitch.me/api/current?lat=35&lon=139",
+        success: function (object) {
+            //objectJSON = JSON.parse(object);
+            $('#city').html(object.name);
+            $('#temp_min').html(object.main.temp_min);
+            $('#temp_max').html(object.main.temp_max);
+            if (object.main.temp_min > 20) {
+                $('#alert').html("Jeśli chcesz, to wystaw swoją roślinę na dwór!");
+                $('#cloud').addClass('green');
+            }
+            else {
+                $('#alert').html("Nie wystawiaj dzisiaj rośliny na zewnątrz!");
+                $('#cloud').addClass('blue');
+            }
+        }
+    });
+</script> {% endblock %}

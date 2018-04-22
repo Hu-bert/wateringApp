@@ -13,7 +13,7 @@ class Statistics(models.Model):
         choices=sensor_choices,
         default='temperature')
     value = models.CharField(max_length=20)
-    dataPub = models.DateField(auto_now_add=True)
+    dataPub = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:  # ustawienia dodatkowe
         ordering = ['dataPub']  # domyślne porządkowanie danych

@@ -1,14 +1,15 @@
 <!DOCTYPE html> {% load staticfiles %}
 <html lang="pl">
-<meta charset="utf-8" />
+<meta charset="utf-8" viewport/>
 
 <head>
     <title>
-        {% block title %} Watering.app system automatycznego podlewania roślin. {% endblock title %}
+        {% block title %} Watering.app | system automatycznego podlewania roślin {% endblock title %}
     </title>
     <link rel="stylesheet" type="text/css" href="{% static 'wateringApp\SemanticUI\semantic.css' %}">
     <script type="text/javascript" src="{% static 'wateringApp\js\jquery-3.3.1.slim.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'wateringApp\SemanticUI\semantic.js' %}"></script>
+    <link rel="shortcut icon" href="{% static '\wateringApp\img\raindrop.png'  %}" />
 </head>
 
 <body>
@@ -17,6 +18,7 @@
             <div class="item">
                 <img src="{% static '\wateringApp\img\raindrop.png' %}">
             </div>
+
             <a class="browse item">
                 Watering.app
             </a>
@@ -39,49 +41,107 @@
                     <!-- Wylogowywanie
                     <div class="item">
                         <a href="">
-                            <i class="power off icon"></i>Wyloguj</a>
+                            <i class="power off icon"></i>Wyloguj</a>`
                     </div> 
                     -->
                 </div>
             </div>
-        </div> <!-- top menu end -->
+        </div>
+        <!-- top menu end -->
         <hr>
-        <div class="ui grid">
-            <div class="three wide column">
-                <div class="ui vertical labeled icon menu">
+        <div class="ui grid"> <!-- to do: skrócić menu-->
+            <div class="three wide computer only column">
+                <div class="ui vertical menu container sticky">
                     <a class="item" href="{% url 'wateringApp:index' %}">
-                        <i class="tachometer alternate icon"></i>
+                        <i class="home icon"></i>
                         Strona główna
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:flowers' %}">
+                        <i class="leaf icon"></i>
+                        Kwiaty
                     </a>
                     <a class="item" href="{% url 'wateringApp:statistics' %}">
                         <i class="chart pie icon"></i>
                         Statystyki
                     </a>
-                    <a class="item">
+                    <a class="item" href="{% url 'wateringApp:settings' %}">
                         <i class="cogs icon"></i>
                         Ustawienia
                     </a>
                 </div>
-            </div> <!-- left menu end -->
-            <div class="one wide column"></div>
-            <div class="eleven wide column">
+            </div>
+            <div class="three wide tablet only column">
+                <div class="ui compact vertical labeled icon menu container sticky">
+                    <a class="item" href="{% url 'wateringApp:index' %}">
+                        <i class="home icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:flowers' %}">
+                        <i class="leaf icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:statistics' %}">
+                        <i class="chart pie icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:settings' %}">
+                        <i class="cogs icon"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="three wide mobile only column">
+                <div class="ui compact vertical labeled icon menu container sticky">
+                    <a class="item" href="{% url 'wateringApp:index' %}">
+                        <i class="home icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:flowers' %}">
+                        <i class="leaf icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:statistics' %}">
+                        <i class="chart pie icon"></i>
+                    </a>
+                    <a class="item" href="{% url 'wateringApp:settings' %}">
+                        <i class="cogs icon"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- left menu end -->
+            <div class="thirteen wide column container" id="context">
                 <h1>
-                    {% block header %} 
-                        Witaj w aplikacji Watering.app! 
-                    {% endblock header%}
+                    {% block header %} Witaj w aplikacji Watering.app! {% endblock header%}
                 </h1>
+                <div class="ui stackable grid ">
+                        <div class="sixteen wide mobile eleven wide computer column">    
+                {% block contents %} {% endblock %}
+                        </div>
+                <div class="sixteen wide mobile five wide computer column">
+                {% block sidebar %} {% endblock %}
+            </div></div>
+            </div>
+            <!-- context end-->
+        </div>
+        <!-- ui grid -->
 
-                {% block contents %} 
-                {% endblock %} 
-
-            </div><!-- context end-->
-        </div><!-- ui grid -->
-    </div><!-- ui container end-->
+    </div>
+    <!-- ui container end-->
 </body>
-
+{% block script %} {% endblock %}
 <script>
     $('.ui.dropdown')
         .dropdown()
         ;
+    $('.context.example .ui.sidebar')
+
+        .sidebar({
+            context: $('.context.example .bottom.segment')
+        })
+        .sidebar('attach events', '.context.example .menu .item')
+        ;
+    $('.ui.sticky')
+        .sticky({
+            offset: 50,
+            bottomOffset: 25,
+            topOffset: 25,
+            context: '#context'
+        })
+        ;
 </script>
+
 </html>
