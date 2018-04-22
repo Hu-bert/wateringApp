@@ -13,7 +13,7 @@
     </div>
     <div class="sixteen wide column">
         <h3>
-            <i class="sun outline icon"></i>Wilgotność gleby</h3>
+            <i class="fire icon"></i>Wilgotność gleby</h3>
         <canvas id='waterContent' width="200" height="100"></canvas>
     </div>
     <div class="sixteen wide column">
@@ -31,9 +31,7 @@
         <div class="header">
             Opcje
         </div>
-        {%for lumen in lumen %}
-        <p>{{lumen.value}}</p>
-        {% endfor %}
+        <p>Jakieś opcje</p>
     </div>
 </div>
 {% endblock %}
@@ -61,15 +59,15 @@
         });
 
         for(i = 0; i< lumen.length;i++){
-            lumenLabels.push(lumen[i].dataPub);
+            lumenLabels.push(lumen[i].dataPub.slice(0, -4).replace("T", " "));
             lumenData.push(lumen[i].value)
         }
         for(i = 0; i< temperature.length;i++){
-            temperatureLabels.push(temperature[i].dataPub);
+            temperatureLabels.push(temperature[i].dataPub.slice(0, -4).replace("T", " "));
             temperatureData.push(temperature[i].value)
         }
         for(i = 0; i< waterContent.length;i++){
-            waterContentLabels.push(waterContent[i].dataPub);
+            waterContentLabels.push(waterContent[i].dataPub.slice(0, -4).replace("T", " "));
             waterContentData.push(waterContent[i].value)
         }
 
@@ -80,10 +78,10 @@
             datasets: [{
                 data: lumenData,
                 backgroundColor: [
-                    'rgb(118, 205, 206, 0.5)',
+                    'rgb(251, 189, 8, 0.5)',
                 ],
                 borderColor: [
-                    'rgb(118, 205, 206, 1)',
+                    'rgb(251, 189, 8. 1)',
                 ],
                 borderWidth: 1
             }]
@@ -108,10 +106,10 @@
             datasets: [{
                 data:  waterContentData,
                 backgroundColor: [
-                    'rgb(118, 205, 206, 0.5)',
+                    'rgb(33, 133, 208, 0.5)',
                 ],
                 borderColor: [
-                    'rgb(118, 205, 206, 1)',
+                    'rgb(33, 133, 208, 1)',
                 ],
                 borderWidth: 1
             }]
@@ -136,10 +134,10 @@
             datasets: [{
                 data: temperatureData,
                 backgroundColor: [
-                    'rgb(118, 205, 206, 0.5)',
+                    'rgb(165, 103, 63, 0.5)',
                 ],
                 borderColor: [
-                    'rgb(118, 205, 206, 1)',
+                    'rgb(165, 103, 63, 1)',
                 ],
                 borderWidth: 1
             }]
